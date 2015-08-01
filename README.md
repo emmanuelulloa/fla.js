@@ -1,2 +1,4 @@
 # fla.js
-A framework for modern banner development
+====
+A framework for HTML5 banner development
+##Selectors
