@@ -12,6 +12,17 @@ fla.ready(function(){
 
 function triggers when 'DOMContentLoaded' triggers or or the document ready state is complete.
 
+```
+console.log(fla.detect('html5'));
+```
+
+It will return true if addEventListener and querySelector is supported by the browser.
+
+```
+console.log(fla.detect('ie'));
+```
+It will return the Internet Explorer version or 0 if any other browser.
+
 ##Selectors
 
 **fla.$('selector')** same as document.querySelector('selector').  Returns html element.
