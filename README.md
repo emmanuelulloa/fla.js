@@ -7,4 +7,6 @@ A framework for HTML5 banner development
 
 **fla.$id('id')** same as document.getElementById('id').  Returns html element.
 
+**fla.$tag('p')** same as document.getElementsByTagName('p').  Returns node list.
 
+**flag.$class('my-class')** same as document.getElementsByClassName('my-class'). Returns node list.
