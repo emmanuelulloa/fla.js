@@ -4,9 +4,11 @@ A framework for HTML5 banner development
 
 ##Initialization
 
-```fla.ready(function(){
-console.log('document is ready');
-}```  
+```
+fla.ready(function(){
+  console.log('document is ready');
+}
+```  
 
 function triggers when 'DOMContentLoaded' triggers or or the document ready state is complete.
 
