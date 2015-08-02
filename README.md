@@ -140,8 +140,32 @@ Specialty method to make simple tweening animations.  Notice that the animation 
 
 **fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.  Use it in combination with fla.enterframe to create interactive animations.
 
-**fla.scroller()** specialty method to simulate functionality like in WOW.js and Waypoints.js.
+**fla.scroller(elementToWatchFor, params)** specialty method to trigger functions when an element is being scrolled.
 
+params.container: the parent element that contains the target element, the element should be scrollable:
+```
+/* CSS */
+.scroll-area {
+overflow-y: scroll; /*or auto*/
+}
+```
+If no container is provided the event will be attach to the document object.
+
+params.distanceFromTop: a number to be added to the scroll range.  If no provided 0 will be used.
+
+params.yes: the function to trigger everytime the element is within the scroll range.
+
+params.no: the function to trigger everytime the element is out of the scroll range.
+
+```
+fla.scroller(fla.$('.scroll-target'), {
+	container: fla.$('.scroll-area'),
+	distanceFromTop: 100,
+	yes: function(){console.log('Element is within scroll range');},
+	no:function(){console.log('Element is off scroll range');}
+});
+```
+Inspired on WOW.js and Waypoints.js
 
 ##Utility methods
 **fla.each()**
