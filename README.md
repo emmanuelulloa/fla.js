@@ -80,13 +80,21 @@ Inspired by AniJS.
 
 ##Javascript animation methods
 
+**fla.delay()**
+```
+var myTimeout = fla.delay(function(){
+  console.log('delay triggered');
+}, 5000);
+```
+A wrapper method for the setTimeout javascript function.  It returns an id that can be used to avoid triggering the function with clearTimeout(myTimeout).
+
 **fla.enterframe(fn,fps)**
 ```
 fla.enterframe(function(){
  console.log('continuosly triggering animation');
 });
 ```
-This function will continously trigger every 60 frames (or every 16 milliseconds).  If another functions is passed later on the first one will be removed.  If false is passed the current animation will stop.  The fps argument is used to change the default 60 fps value.
+This function will continously trigger every 60 frames (or every 16 milliseconds).  If another functions is passed later on the first one will be removed.  If false is passed the current animation will stop.  The fps argument is used to change the default 60 fps value.  Combine with the fla.particles method to create particle systems.
 
 **fla.timeline(frameArray)**
 ```
@@ -95,7 +103,7 @@ fla.timeline([
   [function(){console.log('frame 2');},8000]
 ]);
 ```
-Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).
+Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).  If later on you pass false during the animation it will terminate the timeline animation (remaining timeouts will not trigger).
 
 **fla.tween(object, duration, animationObject, parametersObject)**
 ```
@@ -122,7 +130,18 @@ fla.tween(fadeOutLeft, 2000, fadeIn, {
   }
 });
 ```
-Specialty method to make simple tweening animations.  Notice that the animation is applied over a javascript object and not an HTML element.  Use the **update** function in the parameters object to apply the changes to a visual element.  This methodology is recommended on dynamic animations or browsers that do not support CSS3 animations.
+Specialty method to make simple tweening animations.  Notice that the animation is applied over a javascript object and not an HTML element.  Use the **update** function in the parameters object to apply the changes to a visual element.  This methodology is recommended for dynamic or interactive animations or browsers that do not support CSS3 animations.  In case you need a more powerful featured framework I recommend the GreenSock Animation Platform.
+
+##Events and Interactivity methods
+
+**fla.on(el, eventname, handler)** wrapper function for el.addEventListener().
+
+**fla.off(el, eventname, handler)** wrapper function for el.removeEventListner().
+
+**fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.  Use it in combination with fla.enterframe to create interactive animations.
+
+**fla.scroller()** specialty method to simulate functionality like in WOW.js and Waypoints.js.
+
 
 ##Utility methods
 **fla.each()**
@@ -133,15 +152,5 @@ fla.each(array, function(index, element){
 ```
 Shortcut method for loop operations.  Since this method might be used for particles system relies in the while loop and looping is reversed (from length to 0).
 
-**fla.delay()**
-```
-var myTimeout = fla.delay(function(){
-  console.log('delay triggered');
-}, 5000);
-```
-A wrapper method for the setTimeout javascript function.  It returns an id that can be used for avoid triggering the function with clearTimeout(myTimeout).
-
 **fla.bingo(async)** this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
-
-**fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.
 
