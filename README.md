@@ -49,4 +49,6 @@ It will return the Internet Explorer version or 0 if any other browser.
 
 **fla.css(el, stylePropertyName, stylePropertyValue)** it will rewrite the style object property if a style property is passed, otherwise it will return the computed style value.
 
+**fla.transform**
+
 **fla.rect(el)** same as el.getBoundingClientRect().
