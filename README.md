@@ -92,10 +92,37 @@ This function will continously trigger every 60 frames (or every 16 milliseconds
 ```
 fla.timeline([
   [function(){console.log('frame 1');},2000],
-  [function(){console.log('frame 1');},8000]
+  [function(){console.log('frame 2');},8000]
 ]);
 ```
 Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).
+
+**fla.tween(object, duration, animationObject, parametersObject)**
+```
+var $logo = fla.$('div .logo');
+var fadeOutLeft = {alpha:0, x:-500};
+var fadeIn = {alpha:1, y:0};
+function bounceOut(t) {
+	if (t < (1/2.75)) {
+		return (7.5625*t*t);
+	} else if (t < (2/2.75)) {
+		return (7.5625*(t-=(1.5/2.75))*t + .75);
+	} else if (t < (2.5/2.75)) {
+		return (7.5625*(t-=(2.25/2.75))*t + .9375);
+	} else {
+		return (7.5625*(t-=(2.625/2.75))*t + .984375);
+	}
+}
+fla.tween(fadeOutLeft, 2000, fadeIn, {
+  ease: bounceOut,
+  complete:function(){console.log('animation end');},
+  update:function(animationTarget){
+    $logo.css('opacity', animationTarget.opacity);
+    $logo.transform('translateX(' + animationTarget.x + 'px)');
+  }
+});
+```
+Specialty method to make simple tweening animations.  Notice that the animation is applied over a javascript object and not an HTML element.  Use the **update** function in the parameters object to apply the changes to a visual element.  This methodology is recommended on dynamic animations or browsers that do not support CSS3 animations.
 
 ##Utility methods
 **fla.each()**
