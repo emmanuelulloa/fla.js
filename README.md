@@ -170,7 +170,7 @@ Inspired on WOW.js and Waypoints.js
 ###State Machine
 
 fla.js contains a small implementation for creating State Machines.
-**fla.stateMachine()** it returns a stateMachine object.
+**fla.stateMachine()** returns a stateMachine object.
 ```
 var sm = fla.stateMachine();
 sm.addState('intro', function(){console.log('Entering INTRO state'), function(){'Leaving INTRO state'}});
@@ -200,7 +200,7 @@ Shortcut method for loop operations.  Since this method might be used for partic
 
 **fla.bingo(async)** this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
 
-**fla.breakApart(el,type)** this method takes an element text and break it in spans either by letters, words or lines (<br/>). It will return an HTMLCollection object.
+**fla.breakApart(el,type)** this method takes an element text and break it apart in spans either by letters, words or lines (br tags). It will return an HTMLCollection object.
 
 Inspired by Lettering.js
 
