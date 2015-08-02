@@ -370,8 +370,11 @@ var fla = (function() {
       return el.getBoundingClientRect();
     },
     transform: function(el, t) {
-      el.style.transform = t;
-      el.style.webkitTransform = t;
+      if(t){
+       el.style.transform = t;
+       el.style.webkitTransform = t; 
+      }
+      return el.style.transform || el.style.webkitTransform;
     },
     particles: function(qty, parent, classname, type) {
       var el = type || 'div',
