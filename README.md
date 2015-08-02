@@ -36,6 +36,26 @@ It will return the Internet Explorer version or 0 if any other browser.
 
 **fla.$class('my-class')** same as document.getElementsByClassName('my-class'). Returns node list.
 
+##Class manipulation
+
+Functions by Todd Motto
+
+**fla.hasClass(el, 'classname')** returns true or false wether classname is applied to the element.
+
+**fla.addClass(el, 'classname')** if is not already present it will add the classname to the element.
+
+**fla.removeClass(el, 'classname')** if is present it will remove the class from the element.
+
+**fla.toggleClass(el, 'classname')** it will remove or add the class depending if it is already present or not.
+
+###Utility class manipulation methods
+
+**fla.switchClass(el, 'first', 'second')** it will switch the first class with the second class.
+
+**fla.eventClass(eventName, triggerElement, classname, targetElement)** specialty method to apply different animations on object events.  Inspired by AniJS.
+
+
+
 ##HTML Element manipulation
 
 **fla.hide(el)** it will hide the element.
