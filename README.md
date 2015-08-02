@@ -3,7 +3,7 @@
 A framework for HTML5 banner development
 
 ##Initialization
-
+**fla.ready**
 ```
 fla.ready(function(){
   console.log('document is ready');
@@ -12,6 +12,7 @@ fla.ready(function(){
 
 function triggers when 'DOMContentLoaded' triggers or or the document ready state is complete.
 
+**fla.detect(propertyToDetect)**
 ```
 console.log(fla.detect('html5'));
 ```
@@ -52,3 +53,19 @@ It will return the Internet Explorer version or 0 if any other browser.
 **fla.transform(el,transformString)** shortcut method to access and overwrite the current transformation.  Same as el.style.transform.
 
 **fla.rect(el)** same as el.getBoundingClientRect().
+
+##Utility methods
+**fla.each**
+```
+fla.each(array, function(index, element){
+  console.log([index,element]);
+});
+```
+Shortcut method for loop operations.  Since this method might be used for particles system relies in the while loop and looping is reversed (from length to 0).
+
+**fla.delay**
+```
+var myTimeout = fla.delay(function(){
+  console.log('delay triggered');
+}, 5000);
+```
