@@ -55,7 +55,7 @@ It will return the Internet Explorer version or 0 if any other browser.
 **fla.rect(el)** same as el.getBoundingClientRect().
 
 ##Utility methods
-**fla.each**
+**fla.each()**
 ```
 fla.each(array, function(index, element){
   console.log([index,element]);
@@ -63,9 +63,15 @@ fla.each(array, function(index, element){
 ```
 Shortcut method for loop operations.  Since this method might be used for particles system relies in the while loop and looping is reversed (from length to 0).
 
-**fla.delay**
+**fla.delay()**
 ```
 var myTimeout = fla.delay(function(){
   console.log('delay triggered');
 }, 5000);
 ```
+A wrapper method for the setTimeout javascript function.  It returns an id that can be used for avoid triggering the function with clearTimeout(myTimeout).
+
+**fla.bingo(async)** this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
+
+**fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.
+
