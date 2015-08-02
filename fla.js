@@ -55,6 +55,58 @@ var fla = (function() {
     addClass(el, c2);
   }
 
+  function _classManager(fn, dom, a, b, c) {
+      if (dom.length) {
+        var arr = [];
+        for (var i = 0; i < dom.length; i++) {
+          arr.push(fn(dom[i], a, b, c));
+        }
+        return arr;
+      }
+      return fn(dom, a, b, c);
+    }
+    //events
+  function on(el, evt, fn) {
+    el.addEventListener(evt, fn, false);
+  }
+
+  function off(el, evt, fn) {
+    el.removeEventListener(evt, fn, false);
+  }
+
+  function _eventManager(fn, dom, evt, foo) {
+      if (dom.length) {
+        for (var i = 0; i < dom.length; i++) {
+          fn(dom[i], evt, foo);
+        }
+        return;
+      }
+      fn(dom, evt, foo);
+    }
+    //timeline
+    //each polyfill
+  function each(arr, fn, arg) {
+    var l = arr.length;
+    while (l) {
+      --l;
+      fn.call(arg, l, arr[l], arr);
+    }
+  }
+  var _t = 0,
+    _tos = [];
+
+  function timeline(t) {
+    if (typeof t === 'boolean' && t === false) {
+      for (var i = 0; i < _tos.length; i++) {
+        clearTimeout(_tos[i]);
+      }
+    }
+    for (var i = 0; i < t.length; i++) {
+      _tos.push(setTimeout(t[i][0], _t += t[i][1]));
+    }
+  }
+
+/* NON VITAL METHODS START */
   function _getArgs(val) {
     var arr = ((val.indexOf(',') != -1) ? val.split(',') : [val]);
     return arr;
@@ -65,17 +117,6 @@ var fla = (function() {
       foo: (val.length > 1) ? val[0] : 'addClass',
       arg: (val.length > 1) ? _getArgs(val[1]) : _getArgs(val[0])
     }
-  }
-
-  function _classManager(fn, dom, a, b, c) {
-    if (dom.length) {
-      var arr = [];
-      for (var i = 0; i < dom.length; i++) {
-        arr.push(fn(dom[i], a, b, c));
-      }
-      return arr;
-    }
-    return fn(dom, a, b, c);
   }
 
   function scroller(el, params) {
@@ -130,46 +171,6 @@ var fla = (function() {
       }
       on(_cnt || document, 'scroll', fn);
       return fn;
-    }
-    //events
-  function on(el, evt, fn) {
-    el.addEventListener(evt, fn, false);
-  }
-
-  function off(el, evt, fn) {
-    el.removeEventListener(evt, fn, false);
-  }
-
-  function _eventManager(fn, dom, evt, foo) {
-      if (dom.length) {
-        for (var i = 0; i < dom.length; i++) {
-          fn(dom[i], evt, foo);
-        }
-        return;
-      }
-      fn(dom, evt, foo);
-    }
-    //timeline
-    //each polyfill
-  function each(arr, fn, arg) {
-    var l = arr.length;
-    while (l) {
-      --l;
-      fn.call(arg, l, arr[l], arr);
-    }
-  }
-  var _t = 0,
-    _tos = [];
-
-  function timeline(t) {
-      if (typeof t === 'boolean' && t === false) {
-        for (var i = 0; i < _tos.length; i++) {
-          clearTimeout(_tos[i]);
-        }
-      }
-      for (var i = 0; i < t.length; i++) {
-        _tos.push(setTimeout(t[i][0], _t += t[i][1]));
-      }
     }
     //ticker implementation
   var RAF, _w = window,
@@ -303,45 +304,55 @@ var fla = (function() {
       }
       return _mp;
     }
-  //breakApart
-  function breakApart(el,type){
-    var opts = {
-      'letters':'',
-      'words':' ',
-      'lines':'<br/>'
-    },
-    classname = {
-      '':'class="char',
-      ' ':'class="word',
-      '<br/>':'class="line'
-    },
-    splitter = (!type)?'':opts[type], html = '', o = '<span @@>', c = '</span>',
-      raw = (splitter !== opts.lines) ? el.textContent.split(splitter):el.innerHTML.split(splitter);
-    for(var i = 0; i < raw.length; i++){
-      html += o.replace('@@', classname[splitter] + (i+1) + '" ') + raw[i] + c;
+    //breakApart
+  function breakApart(el, type) {
+      var opts = {
+          'letters': '',
+          'words': ' ',
+          'lines': '<br/>'
+        },
+        classname = {
+          '': 'class="char',
+          ' ': 'class="word',
+          '<br/>': 'class="line'
+        },
+        splitter = (!type) ? '' : opts[type],
+        html = '',
+        o = '<span @@>',
+        c = '</span>',
+        raw = (splitter !== opts.lines) ? el.textContent.split(splitter) : el.innerHTML.split(splitter);
+      for (var i = 0; i < raw.length; i++) {
+        html += o.replace('@@', classname[splitter] + (i + 1) + '" ') + raw[i] + c;
+      }
+      el.innerHTML = html;
+      return el.children;
     }
-    el.innerHTML = html;
-    return el.children;
-  }
-  //State Machine
-  function _FSM(){
+    //State Machine
+  function _FSM() {
     this._state = '';
     this._obj = {};
-    this._noFoo = function(){};
+    this._noFoo = function() {};
   }
   _FSM.prototype = {
-    addState:function(name, enter, leave){
-      this._obj[name] = {e:enter||this._noFoo,l:leave||this._noFoo};
+    addState: function(name, enter, leave) {
+      this._obj[name] = {
+        e: enter || this._noFoo,
+        l: leave || this._noFoo
+      };
     },
-    setState:function(state){
-      if(!state in this._obj){ return; }
+    setState: function(state) {
+      if (!state in this._obj) {
+        return;
+      }
       this._obj[this._state].l();
       this._obj[this._state = state].e();
     }
   }
-  function stateMachine(){
-    return new _FSM();
-  }
+
+  function stateMachine() {
+      return new _FSM();
+    }
+  /* NON VITAL METHODS END */
     //API
   return {
     detect: function(val) {
@@ -415,37 +426,8 @@ var fla = (function() {
       }
       return el.style.transform || el.style.webkitTransform;
     },
-    particles: function(qty, parent, classname, type) {
-      var el = type || 'div',
-        dom = [];
-      for (var i = 0; i < qty; i++) {
-        var o = document.createElement(el);
-        o.id = 'particle' + i;
-        o.className = classname || '';
-        parent.appendChild(o);
-        dom.push(o);
-      }
-      return dom;
-    },
-    bingo: function(async) {
-      if (async) {
-        return (new Date().getMilliseconds() + 1) / 1000;
-      }
-      return middleSquare();
-    },
     delay: function(fn, time) {
       return setTimeout(fn, time || 1000);
-    },
-    eventClass: function(eventname, selector, classname, target) {
-      //if('mouseover') on('.banner') do('shake') [to('.bubble')]
-      var dom = (target) ? target : selector,
-        me = this,
-        fn = function(evt) {
-          var o = _getFn(classname.split(':'));
-          o.arg.unshift(dom);
-          me[o.foo].apply(this, o.arg);
-        };
-      me.on(selector, eventname, fn);
     },
     hasClass: function(dom, c1) {
       _classManager(hasClass, dom, c1);
@@ -468,13 +450,44 @@ var fla = (function() {
     off: function(dom, eventname, fn) {
       _eventManager(off, dom, eventname, fn);
     },
-    breakApart: breakApart,
     each: each,
+    timeline: timeline,
+    /* NON VITAL METHODS START */
+    particles: function(qty, parent, classname, type) {
+      var el = type || 'div',
+        dom = [];
+      for (var i = 0; i < qty; i++) {
+        var o = document.createElement(el);
+        o.id = 'particle' + i;
+        o.className = classname || '';
+        parent.appendChild(o);
+        dom.push(o);
+      }
+      return dom;
+    },
+    bingo: function(async) {
+      if (async) {
+        return (new Date().getMilliseconds() + 1) / 1000;
+      }
+      return middleSquare();
+    },
+    eventClass: function(eventname, selector, classname, target) {
+      //if('mouseover') on('.banner') do('shake') [to('.bubble')]
+      var dom = (target) ? target : selector,
+        me = this,
+        fn = function(evt) {
+          var o = _getFn(classname.split(':'));
+          o.arg.unshift(dom);
+          me[o.foo].apply(this, o.arg);
+        };
+      me.on(selector, eventname, fn);
+    },
+    breakApart: breakApart,
     mouse: mouse,
     scroller: scroller,
     enterframe: enterframe,
-    timeline: timeline,
     tween: tween,
     stateMachine: stateMachine
+    /* NON VITAL METHODS END */
   }
 })();
