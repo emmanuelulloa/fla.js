@@ -74,7 +74,7 @@ Functions by Todd Motto
 ```
 fla.eventClass('onmouseover', fla.$('a'), 'bounce', fla.$('.cta')); 
 ```
-This code is equivalent to say IF onmouseover ON <a> elements, then DO addClass('bounce') TO all elements with the .cta class applied.
+This code is equivalent to say IF onmouseover ON anchor elements, then DO addClass('bounce') TO all elements with the .cta class applied.
 
 Inspired by AniJS.
 
