@@ -304,6 +304,25 @@ var fla = (function() {
       return _mp;
     }
   //breakApart
+  function breakApart(el,type){
+    var opts = {
+      'letters':'',
+      'words':' ',
+      'lines':'<br/>'
+    },
+    classname = {
+      '':'class="char',
+      ' ':'class="word',
+      '<br/>':'class="line'
+    },
+    splitter = (!type)?'':opts[type], html = '', o = '<span @@>', c = '</span>',
+      raw = (splitter !== opts.lines) ? el.textContent.split(splitter):el.innerHTML.split(splitter);
+    for(var i = 0; i < raw.length; i++){
+      html += o.replace('@@', classname[splitter] + (i+1) + '" ') + raw[i] + c;
+    }
+    el.innerHTML = html;
+    return el.children;
+  }
   //State Machine
   function _FSM(){
     this._state = '';
@@ -449,6 +468,7 @@ var fla = (function() {
     off: function(dom, eventname, fn) {
       _eventManager(off, dom, eventname, fn);
     },
+    breakApart: breakApart,
     each: each,
     mouse: mouse,
     scroller: scroller,
