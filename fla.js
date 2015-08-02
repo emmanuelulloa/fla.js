@@ -1,8 +1,3 @@
-/*
-minimize with http://jscompress.com/
-If you are using DoubleClick remember to include the Enabler in the <head>:
-<script src="http://s0.2mdn.net/ads/studio/Enabler.js" type="text/javascript"></script>
-*/
 /*                                      
  _______  ___      _______            ___  _______ 
 |       ||   |    |   _   |          |   ||       |
@@ -10,7 +5,9 @@ If you are using DoubleClick remember to include the Enabler in the <head>:
 |   |___ |   |    |       |          |   || |_____ 
 |    ___||   |___ |       | ___   ___|   ||_____  |
 |   |    |       ||   _   ||   | |       | _____| |
-|___|    |_______||__| |__||___| |_______||_______|                                  
+|___|    |_______||__| |__||___| |_______||_______|    
+By Emmanuel Ulloa
+Get it at: https://github.com/emmanuelulloa/fla.js
 */
 var fla = (function() {
   //feature support
@@ -81,7 +78,7 @@ var fla = (function() {
     return fn(dom, a, b, c);
   }
 
-function scroller(el, params) {
+  function scroller(el, params) {
       /*
       fla.scroller(fla.$('.scroll-target'), {container:fla.$('.my-scroller'), trueFunction:function(el){fla.addClass(el,'redtext')}});
       */
@@ -306,6 +303,26 @@ function scroller(el, params) {
       }
       return _mp;
     }
+  //breakApart
+  //State Machine
+  function _FSM(){
+    this._state = '';
+    this._obj = {};
+    this._noFoo = function(){};
+  }
+  _FSM.prototype = {
+    addState:function(name, enter, leave){
+      this._obj[name] = {e:enter||this._noFoo,l:leave||this._noFoo};
+    },
+    setState:function(state){
+      if(!state in this._obj){ return; }
+      this._obj[this._state].l();
+      this._obj[this._state = state].e();
+    }
+  }
+  function stateMachine(){
+    return new _FSM();
+  }
     //API
   return {
     detect: function(val) {
@@ -373,9 +390,9 @@ function scroller(el, params) {
       return el.getBoundingClientRect();
     },
     transform: function(el, t) {
-      if(t){
-       el.style.transform = t;
-       el.style.webkitTransform = t; 
+      if (t) {
+        el.style.transform = t;
+        el.style.webkitTransform = t;
       }
       return el.style.transform || el.style.webkitTransform;
     },
@@ -433,10 +450,11 @@ function scroller(el, params) {
       _eventManager(off, dom, eventname, fn);
     },
     each: each,
+    mouse: mouse,
     scroller: scroller,
     enterframe: enterframe,
     timeline: timeline,
     tween: tween,
-    mouse: mouse
+    stateMachine: stateMachine
   }
 })();
