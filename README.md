@@ -3,7 +3,7 @@
 A framework for HTML5 banner development
 
 ##Initialization
-**fla.ready**
+**fla.ready(onReadyFunction)**
 ```
 fla.ready(function(){
   console.log('document is ready');
@@ -26,9 +26,9 @@ It will return the Internet Explorer version or 0 if any other browser.
 
 ##Selectors
 
-**fla.$('selector')** same as document.querySelector('selector').  Returns html element.
+**fla.$('#selector')** same as document.querySelector('#selector').  Returns html element.
 
-**fla.$$('selector')** same as document.querySelectorAll('selector').  Returns node list.
+**fla.$$('.selector')** same as document.querySelectorAll('.selector').  Returns node list.
 
 **fla.$id('id')** same as document.getElementById('id').  Returns html element.
 
@@ -132,7 +132,7 @@ fla.tween(fadeOutLeft, 2000, fadeIn, {
 ```
 Specialty method to make simple tweening animations.  Notice that the animation is applied over a javascript object and not an HTML element.  Use the **update** function in the parameters object to apply the changes to a visual element.  This methodology is recommended for dynamic or interactive animations or browsers that do not support CSS3 animations.  In case you need a more powerful featured framework I recommend the GreenSock Animation Platform.
 
-##Events and Interactivity methods
+##Events and Interactive methods
 
 **fla.on(el, eventname, handler)** wrapper function for el.addEventListener().
 
@@ -151,7 +151,7 @@ overflow-y: scroll; /*or auto*/
 ```
 If no container is provided the event will be attach to the document object.
 
-params.distanceFromTop: a number to be added to the scroll range.  If no provided 0 will be used.
+params.distanceFromTop: the distance from the top of the container to trigger the yes/no functions.  If no provided 0 will be used.
 
 params.yes: the function to trigger everytime the element is within the scroll range.
 
