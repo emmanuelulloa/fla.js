@@ -78,6 +78,25 @@ This code is equivalent to say IF onmouseover ON anchor elements, then DO addCla
 
 Inspired by AniJS.
 
+##Javascript animation methods
+
+**fla.enterframe(fn,fps)**
+```
+fla.enterframe(function(){
+ console.log('continuosly triggering animation');
+});
+```
+This function will continously trigger every 60 frames (or every 16 milliseconds).  If another functions is passed later on the first one will be removed.  If false is passed the current animation will stop.  The fps argument is used to change the default 60 fps value.
+
+**fla.timeline(frameArray)**
+```
+fla.timeline([
+  [function(){console.log('frame 1');},2000],
+  [function(){console.log('frame 1');},8000]
+]);
+```
+Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).
+
 ##Utility methods
 **fla.each()**
 ```
