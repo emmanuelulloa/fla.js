@@ -35,3 +35,18 @@ It will return the Internet Explorer version or 0 if any other browser.
 
 **fla.$class('my-class')** same as document.getElementsByClassName('my-class'). Returns node list.
 
+##HTML Element manipulation
+
+**fla.hide(el)** it will hide the element.
+
+**fla.show(el)** it will show the element as long as display is not equal to 'hidden' in any of the applied classes.
+
+**fla.text(el, stringValue)** it will rewrite the text content.  If no string value is passed it will return the current text.
+
+**fla.html(el, stringValue)** it will rewrite the html content of the element.  If no string value is passed it will return the current text.
+
+**fla.attr(el, attributeName, attributeValue )** it will rewrite the attribute value if attribute value is passed otherwise it will return the current attribute value.
+
+**fla.css(el, stylePropertyName, stylePropertyValue)** it will rewrite the style object property if a style property is passed, otherwise it will return the computed style value.
+
+**fla.rect(el)** same as el.getBoundingClientRect().
