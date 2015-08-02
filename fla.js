@@ -81,7 +81,7 @@ var fla = (function() {
     return fn(dom, a, b, c);
   }
 
-  function scroller(el, params) {
+function scroller(el, params) {
       /*
       fla.scroller(fla.$('.scroll-target'), {container:fla.$('.my-scroller'), trueFunction:function(el){fla.addClass(el,'redtext')}});
       */
@@ -91,34 +91,37 @@ var fla = (function() {
         if (params.container) {
           _cnt = params.container
         }
-        if (params.trueFunction) {
-          _tf = params.trueFunction
+        if (params.yes) {
+          _tf = params.yes
         }
-        if (params.falseFunction) {
-          _ff = params.falseFunction
+        if (params.no) {
+          _ff = params.no
         }
         if (params.distanceFromTop) {
-          _dft = params.distanceFromTop
+          _dft = Math.abs(params.distanceFromTop)
         }
 
       }
       fn = function(evt) {
-        var _scroll = 0;
+        var _scroll = 0,
+          _offset = 0;
         if (_cnt) {
           _scroll = _cnt.scrollTop;
+          _offset = _cnt.getBoundingClientRect().top;
         } else {
           _scroll = document.body && document.body.scrollTop || document.documentElement && document.documentElement.scrollTop;
         }
-        var _elTop = el.getBoundingClientRect().top,
+        var _elemTop = el.getBoundingClientRect().top,
           info = {
             event: evt,
             scroll: _scroll,
-            scrollTop: _elTop,
+            scrollTop: _elemTop,
+            offset: _offset,
             distanceFromTop: _dft,
             target: el,
             scroller: _cnt || document
           };
-        if (_elTop < _scroll - _dft) {
+        if (_elemTop < (_scroll - _offset) + _dft) {
           if (_tf) {
             _tf(info);
           }
