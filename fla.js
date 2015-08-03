@@ -1,11 +1,15 @@
+/*
+minimize with http://jscompress.com/
+If you are using DoubleClick remember to include the Enabler in the <head>:
+<script src="http://s0.2mdn.net/ads/studio/Enabler.js" type="text/javascript"></script>
+*/
 /*                                      
- _______  ___      _______            ___  _______ 
-|       ||   |    |   _   |          |   ||       |
-|    ___||   |    |  |_|  |          |   ||  _____|
-|   |___ |   |    |       |          |   || |_____ 
-|    ___||   |___ |       | ___   ___|   ||_____  |
-|   |    |       ||   _   ||   | |       | _____| |
-|___|    |_______||__| |__||___| |_______||_______|    
+_____________        ________        
+___  __/__  /_____ _ ______(_)_______
+__  /_ __  /_  __ `/ _____  /__  ___/
+_  __/ _  / / /_/ /______  / _(__  ) 
+/_/    /_/  \__,_/_(_)__  /  /____/  
+                     /___/           
 By Emmanuel Ulloa
 Get it at: https://github.com/emmanuelulloa/fla.js
 */
@@ -491,3 +495,10 @@ var fla = (function() {
     /* NON VITAL METHODS END */
   }
 })();
+
+/*
+ __                  ___  __      __   __   __   ___ 
+|__)  /\  |\ | |\ | |__  |__)    /  ` /  \ |  \ |__  
+|__) /~~\ | \| | \| |___ |  \    \__, \__/ |__/ |___ 
+                                                     
+*/
