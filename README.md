@@ -70,7 +70,7 @@ Functions by Todd Motto
 
 **fla.switchClass(el, 'first', 'second')** it will switch the first class with the second class.
 
-**fla.eventClass(eventName, triggerElement, classname, targetElement)** specialty method to apply different animations on object events.  
+**fla.eventClass(eventName, triggerElement, classname, targetElement)** <sup>NV</sup> specialty method to apply different animations on object events.  
 ```
 fla.eventClass('onmouseover', fla.$('a'), 'bounce', fla.$('.cta')); 
 ```
@@ -88,7 +88,7 @@ var myTimeout = fla.delay(function(){
 ```
 A wrapper method for the setTimeout javascript function.  It returns an id that can be used to avoid triggering the function with clearTimeout(myTimeout).
 
-**fla.enterframe(fn,fps)**
+**fla.enterframe(fn,fps)** <sup>NV</sup>
 ```
 fla.enterframe(function(){
  console.log('continuosly triggering animation');
@@ -105,7 +105,7 @@ fla.timeline([
 ```
 Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).  If later on you pass false during the animation it will terminate the timeline animation (remaining timeouts will not trigger).
 
-**fla.tween(object, duration, animationObject, parametersObject)**
+**fla.tween(object, duration, animationObject, parametersObject)** <sup>NV</sup>
 ```
 var $logo = fla.$('div .logo');
 var fadeOutLeft = {alpha:0, x:-500};
@@ -140,7 +140,7 @@ Specialty method to make simple tweening animations.  Notice that the animation 
 
 **fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.  Use it in combination with fla.enterframe to create interactive animations.
 
-**fla.scroller(elementToWatchFor, params)** specialty method to trigger functions when an element is being scrolled.
+**fla.scroller(elementToWatchFor, params)** <sup>NV</sup> specialty method to trigger functions when an element is being scrolled.
 
 params.container: the parent element that contains the target element, the element should be scrollable:
 ```
@@ -170,7 +170,7 @@ Inspired on WOW.js and Waypoints.js
 ###State Machine
 
 fla.js contains a small implementation for creating State Machines.
-**fla.stateMachine()** returns a stateMachine object.
+**fla.stateMachine()** <sup>NV</sup> returns a stateMachine object.
 ```
 var sm = fla.stateMachine();
 sm.addState('intro', function(){console.log('Entering INTRO state'), function(){'Leaving INTRO state'}});
@@ -198,7 +198,7 @@ fla.each(array, function(index, element){
 ```
 Shortcut method for loop operations.  Since this method might be used for particles system relies in the while loop and looping is reversed (from length to 0).
 
-**fla.bingo(async)** this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
+**fla.bingo(async)** <sup>NV</sup> this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
 
 **fla.breakApart(el,type)** <sup>NV</sup> this method takes an element text and break it apart in spans either by letters, words or lines (br tags). It will return an HTMLCollection object.
 
