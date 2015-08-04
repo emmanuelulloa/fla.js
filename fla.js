@@ -1,8 +1,3 @@
-/*
-minimize with http://jscompress.com/
-If you are using DoubleClick remember to include the Enabler in the <head>:
-<script src="http://s0.2mdn.net/ads/studio/Enabler.js" type="text/javascript"></script>
-*/
 /*                                      
 _____________        ________        
 ___  __/__  /_____ _ ______(_)_______
@@ -14,12 +9,20 @@ By Emmanuel Ulloa
 Get it at: https://github.com/emmanuelulloa/fla.js
 */
 var fla = (function() {
-  //feature support
-  var ua = navigator.userAgent.toLowerCase();
-  var _detect = {
-    html5: 'querySelector' in document && 'addEventListener' in window,
-    ie: (ua != -1) ? parseInt(ua.split('msie')[1]) : 0
+  var F = {
+    UA : navigator.userAgent.toLowerCase(),
+    DOC : document,
+    WIN : window,
+    DET : {},//detect
+    TIME: 0,//timeline
+    TOS : [],//timeline
+    X : {},//enterframe, tween
+    MATH : {},
+    MOUSE : {}
   };
+  //detect
+  F.DET.html5 = 'querySelector' in F.DOC && 'addEventListener' in F.WIN;
+  F.DET.ie = (F.UA != -1) ? parseInt(F.UA.split('msie')[1]) : 0;
   //class manipulation
   //functions by Todd Motto
   function hasClass(elem, className) {
@@ -87,7 +90,7 @@ var fla = (function() {
       }
       fn(dom, evt, foo);
     }
-    //timeline
+    
     //each polyfill
   function each(arr, fn, arg) {
     var l = arr.length;
@@ -96,17 +99,15 @@ var fla = (function() {
       fn.call(arg, l, arr[l], arr);
     }
   }
-  var _t = 0,
-    _tos = [];
-
+//timeline
   function timeline(t) {
     if (typeof t === 'boolean' && t === false) {
-      for (var i = 0; i < _tos.length; i++) {
-        clearTimeout(_tos[i]);
+      for (var i = 0; i < F.TOS.length; i++) {
+        clearTimeout(F.TOS[i]);
       }
     }
     for (var i = 0; i < t.length; i++) {
-      _tos.push(setTimeout(t[i][0], _t += t[i][1]));
+      F.TOS.push(setTimeout(t[i][0], F.TIME += t[i][1]));
     }
   }
 
@@ -144,6 +145,7 @@ var fla = (function() {
         }
 
       }
+      var DOC = F.DOC;
       fn = function(evt) {
         var _scroll = 0,
           _offset = 0;
@@ -151,7 +153,7 @@ var fla = (function() {
           _scroll = _cnt.scrollTop;
           _offset = _cnt.getBoundingClientRect().top;
         } else {
-          _scroll = document.body && document.body.scrollTop || document.documentElement && document.documentElement.scrollTop;
+          _scroll = DOC.body && DOC.body.scrollTop || DOC.documentElement && DOC.documentElement.scrollTop;
         }
         var _elemTop = el.getBoundingClientRect().top,
           info = {
@@ -161,7 +163,7 @@ var fla = (function() {
             offset: _offset,
             distanceFromTop: _dft,
             target: el,
-            scroller: _cnt || document
+            scroller: _cnt || DOC
           };
         if (_elemTop < (_scroll - _offset) + _dft) {
           if (_tf) {
@@ -173,22 +175,23 @@ var fla = (function() {
           }
         }
       }
-      on(_cnt || document, 'scroll', fn);
+      on(_cnt || F.DOC, 'scroll', fn);
       return fn;
     }
     //ticker implementation
-  var RAF, _w = window,
-    _r = 'request' + 'AnimationFrame',
-    _fps = 16;
-  if (!_w[_r]) {
-    _r = 'Request' + 'AnimationFrame';
-    RAF = _w['webkit' + _r] || _w['moz' + _r] || _w['ms' + _r] || _w['o' + _r] || function(callback) {
-      return _w.setTimeout(callback, _fps);
+  F.X.RAF = null;
+  F.X.FPS = 16;
+  var req = 'request' + 'AnimationFrame';
+  if (!F.WIN[req]) {
+    req = 'Request' + 'AnimationFrame';
+    F.X.RAF = F.WIN['webkit' + req] || F.WIN['moz' + req] || F.WIN['ms' + req] || F.WIN['o' + req] || function(callback) {
+      return F.WIN.setTimeout(callback, F.X.FPS);
     }
   } else {
-    RAF = _w[_r];
+    F.X.RAF = F.WIN[req];
   }
-  var TICKER = {
+var RAF = F.X.RAF;
+F.X.TICKER = {
     _ts: [],
     _qty: 0,
     _ip: false,
@@ -210,26 +213,26 @@ var fla = (function() {
       return;
     },
     tick: function() {
-      var l = TICKER._ts.length;
+      var l = F.X.TICKER._ts.length;
       while (l--) {
-        TICKER._ts[l]();
+        F.X.TICKER._ts[l]();
       }
-      RAF(TICKER.tick);
+      RAF(F.X.TICKER.tick);
     }
   };
   //enterframe
-  var _ef;
+  F.X.OEF = null;
 
   function enterframe(fn, fps) {
-      _fps = (fps) ? 1000 / fps : 16;
+      F.X.FPS = (fps) ? 1000 / fps : 16;
       if (typeof fn === 'boolean' && fn === false) {
-        TICKER.remove(_ef);
+        F.X.TICKER.remove(F.X.OEF);
         return;
       }
-      if (_ef) {
-        TICKER.remove(_ef);
+      if (F.X.OEF) {
+        F.X.TICKER.remove(F.X.OEF);
       }
-      TICKER.add(_ef = fn);
+      F.X.TICKER.add(F.X.OEF = fn);
     }
     //tween
   function tween(o, d, f, params) {
@@ -257,7 +260,7 @@ var fla = (function() {
         b[k] = o[k];
         l[k] = f[k] - o[k]
       }
-      var _tween = TICKER.add(function() {
+      var _tween = F.X.TICKER.add(function() {
         if (t > dur) {
           for (var k in f) {
             o[k] = f[k];
@@ -265,7 +268,7 @@ var fla = (function() {
           if (c) {
             c(o);
           }
-          TICKER.remove(_tween);
+          F.X.TICKER.remove(_tween);
         } else {
           for (var k in f) {
             o[k] = ease(t / dur) * l[k] + b[k];
@@ -278,35 +281,36 @@ var fla = (function() {
       });
     }
     //middle-square
-  var _seed = 1234;
-
+  F.MATH.SEED = 1234;
   function middleSquare(seed) {
-      _seed = (seed) ? seed : _seed;
-      var sq = (_seed * _seed) + '';
-      _seed = parseInt(sq.substring(0, 4));
-      return parseFloat('0.' + _seed);
+      F.MATH.SEED = (seed) ? seed : F.MATH.SEED;
+      var sq = (F.MATH.SEED * F.MATH.SEED) + '';
+      F.MATH.SEED = parseInt(sq.substring(0, 4));
+      return parseFloat('0.' + F.MATH.SEED);
     }
     //mouse position
-  var _mt, _mp = {
+  F.MOUSE.TARGET = null;
+  F.MOUSE.INFO = {
     x: 0,
     y: 0,
     pressed: false
   };
 
   function mouse(target) {
-      if (!_mt) {
-        on(_mt = target || document, 'mousemove', function(evt) {
-          _mp.x = evt.clientX;
-          _mp.y = evt.clientY;
+      if (!F.MOUSE.TARGET) {
+        F.MOUSE.TARGET = target
+        on(F.MOUSE.TARGET || F.DOC, 'mousemove', function(evt) {
+          F.MOUSE.INFO.x = evt.clientX;
+          F.MOUSE.INFO.y = evt.clientY;
         });
-        on(_mt = target || document, 'mousedown', function(evt) {
-          _mp.pressed = true;
+        on(F.DOC, 'mousedown', function(evt) {
+          F.MOUSE.INFO.pressed = true;
         });
-        on(_mt = target || document, 'mouseup', function(evt) {
-          _mp.pressed = false;
+        on(F.DOC, 'mouseup', function(evt) {
+          F.MOUSE.INFO.pressed = false;
         });
       }
-      return _mp;
+      return F.MOUSE.INFO;
     }
     //breakApart
   function breakApart(el, type) {
@@ -360,7 +364,7 @@ var fla = (function() {
     //API
   return {
     detect: function(val) {
-      return _detect[val];
+      return F.DET[val];
     },
     ready: function(fn) {
       if (typeof fn !== 'function') {
@@ -500,5 +504,5 @@ var fla = (function() {
  __                  ___  __      __   __   __   ___ 
 |__)  /\  |\ | |\ | |__  |__)    /  ` /  \ |  \ |__  
 |__) /~~\ | \| | \| |___ |  \    \__, \__/ |__/ |___ 
-                                                     
+
 */
