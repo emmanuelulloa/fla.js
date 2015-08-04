@@ -138,7 +138,7 @@ Specialty method to make simple tweening animations.  Notice that the animation 
 
 **fla.off(el, eventname, handler)** wrapper function for el.removeEventListner().
 
-**fla.mouse(target)** returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.  Use it in combination with fla.enterframe to create interactive animations.
+**fla.mouse(target)** <sup>NV</sup> returns an object with x, y and 'pressed' values with the current mouse position if an html element is passed it will return the coordinates for that target element.  Use it in combination with fla.enterframe to create interactive animations.
 
 **fla.scroller(elementToWatchFor, params)** <sup>NV</sup> specialty method to trigger functions when an element is being scrolled.
 
