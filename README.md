@@ -204,4 +204,4 @@ Shortcut method for loop operations.  Since this method might be used for partic
 
 Inspired by Lettering.js
 
-**NV** any method marked as NV is Non Vital and they can be deleted if size becomes an issue.
+**NV**: any method marked as NV is Non Vital and they can be deleted if size becomes an issue.
