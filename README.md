@@ -200,7 +200,8 @@ Shortcut method for loop operations.  Since this method might be used for partic
 
 **fla.bingo(async)** this is a Math.random() replacement method (that might not be allowed in certain rich media platforms).  If async is equal to true it will rely on the current time to generate a random number.
 
-**fla.breakApart(el,type)** this method takes an element text and break it apart in spans either by letters, words or lines (br tags). It will return an HTMLCollection object.
+**fla.breakApart(el,type)** <sup>NV</sup> this method takes an element text and break it apart in spans either by letters, words or lines (br tags). It will return an HTMLCollection object.
 
 Inspired by Lettering.js
 
+**NV** any method marked as NV is Non Vital and they can be deleted if size becomes an issue.
