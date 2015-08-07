@@ -68,6 +68,8 @@ Functions by Todd Motto
 
 ###Utility class manipulation methods
 
+**fla.class(el,'myClass')** wrapper method to get and set the className property of the element passed.
+
 **fla.switchClass(el, 'first', 'second')** it will switch the first class with the second class.
 
 **fla.eventClass(eventName, triggerElement, classname, targetElement)** <sup>NV</sup> specialty method to apply different animations on object events.  
