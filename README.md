@@ -103,7 +103,29 @@ fla.timeline([
   [function(){console.log('frame 2');},8000]
 ]);
 ```
-Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).  If later on you pass false during the animation it will terminate the timeline animation (remaining timeouts will not trigger).
+Specialty method to trigger several setTimeout() calls one after the other.  Each frame is represented by a function and a time delay in milliseconds.  The first one will trigger after 2 seconds, the second one after 10 seconds (2 of the first one plus 8 of the second one).  
+
+There are other values you can pass to obtain information about the timeline:
+
+```
+fla.timeline('duration');
+```
+It will return the total duration of the timeline in milliseconds.
+
+```
+fla.timeline('loops');
+```
+It will return how many times the timeline has looped.
+
+```
+fla.timeline('timeline'); 
+```
+It will return the current timeline in memory.
+
+```
+fla.timeline(false);
+```
+It will stop the timeline if is running.
 
 **fla.tween(object, duration, animationObject, parametersObject)** <sup>NV</sup>
 ```
