@@ -14,8 +14,7 @@ var fla = (function() {
     DOC : document,
     WIN : window,
     DET : {},//detect
-    TIME: 0,//timeline
-    TOS : [],//timeline
+    T : {LOOPS:0}, //timeline
     X : {},//enterframe, tween
     MATH : {},
     MOUSE : {}
@@ -57,6 +56,13 @@ var fla = (function() {
     }
   }
 
+  function getSetClass(el, c1){
+    if(c1){
+      el.className = c1;
+    }
+    return el.className;
+  }
+  
   function switchClass(el, c1, c2) {
     removeClass(el, c1);
     addClass(el, c2);
@@ -101,13 +107,22 @@ var fla = (function() {
   }
 //timeline
   function timeline(t) {
-    if (typeof t === 'boolean' && t === false) {
-      for (var i = 0; i < F.TOS.length; i++) {
-        clearTimeout(F.TOS[i]);
-      }
+    if(typeof t === 'string'){
+      var map = {'loops':F.T.LOOPS,'duration':F.T.DUR, 'timeline':F.T.TL};
+      return map[t];
     }
+    if (typeof t === 'boolean' && t === false) {
+      for (var i = 0; i < F.T.TOS.length; i++) {
+        clearTimeout(F.T.TOS[i]);
+      }
+      return;
+    }
+    F.T.TOS = [];
+    F.T.DUR = 0;
+    F.T.TL = t;
+    F.T.LOOPS++;
     for (var i = 0; i < t.length; i++) {
-      F.TOS.push(setTimeout(t[i][0], F.TIME += t[i][1]));
+      F.T.TOS.push(setTimeout(t[i][0], F.T.DUR += t[i][1]));
     }
   }
 
@@ -437,8 +452,11 @@ F.X.TICKER = {
     delay: function(fn, time) {
       return setTimeout(fn, time || 1000);
     },
+    class: function(dom, c1){
+      return _classManager(getSetClass, dom, c1);
+    },
     hasClass: function(dom, c1) {
-      _classManager(hasClass, dom, c1);
+      return _classManager(hasClass, dom, c1);
     },
     addClass: function(dom, c1) {
       _classManager(addClass, dom, c1);
@@ -504,5 +522,5 @@ F.X.TICKER = {
  __                  ___  __      __   __   __   ___ 
 |__)  /\  |\ | |\ | |__  |__)    /  ` /  \ |  \ |__  
 |__) /~~\ | \| | \| |___ |  \    \__, \__/ |__/ |___ 
-
+                                                     
 */
