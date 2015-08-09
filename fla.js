@@ -10,14 +10,16 @@ Get it at: https://github.com/emmanuelulloa/fla.js
 */
 var fla = (function() {
   var F = {
-    UA : navigator.userAgent.toLowerCase(),
-    DOC : document,
-    WIN : window,
-    DET : {},//detect
-    T : {LOOPS:0}, //timeline
-    X : {},//enterframe, tween
-    MATH : {},
-    MOUSE : {}
+    UA: navigator.userAgent.toLowerCase(),
+    DOC: document,
+    WIN: window,
+    DET: {}, //detect
+    T: {
+      LOOPS: 0
+    }, //timeline
+    X: {}, //enterframe, tween
+    MATH: {},
+    MOUSE: {}
   };
   //detect
   F.DET.html5 = 'querySelector' in F.DOC && 'addEventListener' in F.WIN;
@@ -56,27 +58,16 @@ var fla = (function() {
     }
   }
 
-  function getSetClass(el, c1){
-    if(c1){
+  function getSetClass(el, c1) {
+    if (c1) {
       el.className = c1;
     }
     return el.className;
   }
-  
-  function switchClass(el, c1, c2) {
-    removeClass(el, c1);
-    addClass(el, c2);
-  }
 
-  function _classManager(fn, dom, a, b, c) {
-      if (dom.length) {
-        var arr = [];
-        for (var i = 0; i < dom.length; i++) {
-          arr.push(fn(dom[i], a, b, c));
-        }
-        return arr;
-      }
-      return fn(dom, a, b, c);
+  function switchClass(el, c1, c2) {
+      removeClass(el, c1);
+      addClass(el, c2);
     }
     //events
   function on(el, evt, fn) {
@@ -87,28 +78,83 @@ var fla = (function() {
     el.removeEventListener(evt, fn, false);
   }
 
-  function _eventManager(fn, dom, evt, foo) {
-      if (dom.length) {
-        for (var i = 0; i < dom.length; i++) {
-          fn(dom[i], evt, foo);
-        }
-        return;
+  function _selectorManager(fn, dom, args) {
+    if (dom.length) {
+      var retArray = [];
+      for (var i = 0; i < dom.length; i++) {
+        retArray.push(fn.apply(null, ([dom[i]]).concat(args)));
       }
-      fn(dom, evt, foo);
+      return retArray;
     }
-    
+    return fn.apply(null, ([dom]).concat(args));
+  }
+
+  function hide(el) {
+    el.style.display = 'none';
+  }
+
+  function show(el) {
+    el.style.display = '';
+  }
+
+  function text(el, val) {
+    if (val) {
+      el.textContent = val;
+    }
+    return el.textContent;
+  }
+
+  function html(el, val) {
+    if (val) {
+      el.innerHTML = val;
+    }
+    return el.innerHTML;
+  }
+
+  function attr(el, att, val) {
+    if (val) {
+      el.setAttribute(att, val);
+    }
+    return el.getAttribute(att);
+  }
+
+  function css(el, prop, val) {
+    var p = (prop).replace(/-([a-z])/g, function(g) {
+      return g[1].toUpperCase();
+    }).toLowerCase();
+    if (val) {
+      el.style[p] = val;
+    }
+    return getComputedStyle(el)[p];
+  }
+
+  function rect(el) {
+    return el.getBoundingClientRect();
+  }
+
+  function transform(el, t) {
+      if (t) {
+        el.style.transform = t;
+        el.style.webkitTransform = t;
+      }
+      return el.style.transform || el.style.webkitTransform;
+    }
     //each polyfill
   function each(arr, fn, arg) {
-    var l = arr.length;
-    while (l) {
-      --l;
-      fn.call(arg, l, arr[l], arr);
+      var l = arr.length;
+      while (l) {
+        --l;
+        fn.call(arg, l, arr[l], arr);
+      }
     }
-  }
-//timeline
+    //timeline
   function timeline(t) {
-    if(typeof t === 'string'){
-      var map = {'loops':F.T.LOOPS,'duration':F.T.DUR, 'timeline':F.T.TL};
+    if (typeof t === 'string') {
+      var map = {
+        'loops': F.T.LOOPS,
+        'duration': F.T.DUR,
+        'timeline': F.T.TL
+      };
       return map[t];
     }
     if (typeof t === 'boolean' && t === false) {
@@ -126,7 +172,7 @@ var fla = (function() {
     }
   }
 
-/* NON VITAL METHODS START */
+  /* NON VITAL METHODS START */
   function _getArgs(val) {
     var arr = ((val.indexOf(',') != -1) ? val.split(',') : [val]);
     return arr;
@@ -205,8 +251,8 @@ var fla = (function() {
   } else {
     F.X.RAF = F.WIN[req];
   }
-var RAF = F.X.RAF;
-F.X.TICKER = {
+  var RAF = F.X.RAF;
+  F.X.TICKER = {
     _ts: [],
     _qty: 0,
     _ip: false,
@@ -297,6 +343,7 @@ F.X.TICKER = {
     }
     //middle-square
   F.MATH.SEED = 1234;
+
   function middleSquare(seed) {
       F.MATH.SEED = (seed) ? seed : F.MATH.SEED;
       var sq = (F.MATH.SEED * F.MATH.SEED) + '';
@@ -375,7 +422,7 @@ F.X.TICKER = {
   function stateMachine() {
       return new _FSM();
     }
-  /* NON VITAL METHODS END */
+    /* NON VITAL METHODS END */
     //API
   return {
     detect: function(val) {
@@ -406,75 +453,60 @@ F.X.TICKER = {
     $$: function(selector, el) {
       return (el || document).querySelectorAll(selector);
     },
-    hide: function(el) {
-      el.style.display = 'none';
+    hide: function(dom) {
+      _selectorManager(hide, dom, []);
     },
-    show: function(el) {
-      el.style.display = '';
+    show: function(dom) {
+      _selectorManager(show, dom, []);
     },
-    text: function(el, val) {
-      if (val) {
-        el.textContent = val;
-      }
-      return el.textContent;
+    text: function(dom, val) {
+      return _selectorManager(text, dom, [val]);
     },
-    html: function(el, val) {
-      if (val) {
-        el.innerHTML = val;
-      }
-      return el.innerHTML;
+    html: function(dom, val) {
+      return _selectorManager(html, dom, [val]);
     },
-    attr: function(el, att, val) {
-      if (val) {
-        el.setAttribute(att, val);
-      }
-      return el.getAttribute(att);
+    attr: function(dom, att, val) {
+      return _selectorManager(attr, dom, [att, val])
     },
-    css: function(el, prop, val) {
-      var p = (prop).replace(/-([a-z])/g, function(g) {
-        return g[1].toUpperCase();
-      }).toLowerCase();
-      if (val) {
-        el.style[p] = val;
-      }
-      return getComputedStyle(el)[p];
+    css: function(dom, prop, val) {
+      return _selectorManager(css, dom, [prop, val])
     },
-    rect: function(el) {
-      return el.getBoundingClientRect();
+    rect: function(dom) {
+      return _selectorManager(rect, dom, []);
     },
-    transform: function(el, t) {
-      if (t) {
-        el.style.transform = t;
-        el.style.webkitTransform = t;
-      }
-      return el.style.transform || el.style.webkitTransform;
+    transform: function(dom, t) {
+      return _selectorManager(transform, dom, [t]);
     },
     delay: function(fn, time) {
       return setTimeout(fn, time || 1000);
     },
-    class: function(dom, c1){
-      return _classManager(getSetClass, dom, c1);
+    class: function(dom, c1) {
+      return _selectorManager(getSetClass, dom, [c1]);
     },
     hasClass: function(dom, c1) {
-      return _classManager(hasClass, dom, c1);
+      return _selectorManager(hasClass, dom, [c1]);
     },
     addClass: function(dom, c1) {
-      _classManager(addClass, dom, c1);
+      _selectorManager(addClass, dom, [c1]);
+      return this;
     },
     removeClass: function(dom, c1) {
-      _classManager(removeClass, dom, c1);
+      _selectorManager(removeClass, dom, [c1]);
+      return this;
     },
     toggleClass: function(dom, c1) {
-      _classManager(toggleClass, dom, c1);
+      _selectorManager(toggleClass, dom, [c1]);
+      return this;
     },
     switchClass: function(dom, c1, c2) {
-      _classManager(switchClass, dom, c1, c2);
+      _selectorManager(switchClass, dom, [c1, c2]);
+      return this;
     },
     on: function(dom, eventname, fn) {
-      _eventManager(on, dom, eventname, fn);
+      _selectorManager(on, dom, [eventname, fn]);
     },
     off: function(dom, eventname, fn) {
-      _eventManager(off, dom, eventname, fn);
+      _selectorManager(off, dom, [eventname, fn]);
     },
     each: each,
     timeline: timeline,
@@ -514,7 +546,7 @@ F.X.TICKER = {
     enterframe: enterframe,
     tween: tween,
     stateMachine: stateMachine
-    /* NON VITAL METHODS END */
+      /* NON VITAL METHODS END */
   }
 })();
 
