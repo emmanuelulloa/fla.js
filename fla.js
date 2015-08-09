@@ -19,7 +19,7 @@ var fla = (function() {
     }, //timeline
     X: {}, //enterframe, tween
     MATH: {},
-    EASE: {},//tween, animate
+    EASE: {}, //tween, animate
     MOUSE: {}
   };
   //detect
@@ -286,22 +286,36 @@ var fla = (function() {
   F.X.OEF = null;
 
   function enterframe(fn, fps) {
-      F.X.FPS = (fps) ? 1000 / fps : 16;
-      if (typeof fn === 'boolean' && fn === false) {
-        F.X.TICKER.remove(F.X.OEF);
-        return;
-      }
-      if (F.X.OEF) {
-        F.X.TICKER.remove(F.X.OEF);
-      }
-      F.X.TICKER.add(F.X.OEF = fn);
+    F.X.FPS = (fps) ? 1000 / fps : 16;
+    if (typeof fn === 'boolean' && fn === false) {
+      F.X.TICKER.remove(F.X.OEF);
+      return;
     }
-  F.MATH.getFrames = function(dur){
+    if (F.X.OEF) {
+      F.X.TICKER.remove(F.X.OEF);
+    }
+    F.X.TICKER.add(F.X.OEF = fn);
+  }
+  F.MATH.getFrames = function(dur) {
     return (typeof dur != 'string') ? Math.round(dur / 16.666) : (dur == "fast") ? 12 : (dur == "slow") ? 32 : 24;
   };
-  F.EASE.DEFAULT = function(t) {
-     return t * t * (3 - 2 * t);
-  };
+  F.EASE = {
+    DEFAULT : function(t) {
+      return t * t * (3 - 2 * t);
+    },
+    LINEAR : function(t){
+      return t;
+    },
+    OUT : function(t){
+      return t * t;
+    },
+    IN : function(t){
+      return Math.sin(Math.PI * t/2);
+    },
+    INOUT : function(t){
+      return (Math.sin(t * Math.PI - Math.PI/2)+1)/2;
+    }
+  }
   //tween
   function tween(o, d, f, params) {
       //target object, duration, final value object, ease, update function, complete function
@@ -347,48 +361,72 @@ var fla = (function() {
       });
     }
     //animate
-  function animate(el, d, f, params){
-    //target element, duration, final value object, ease, update function, complete function
-    var retArray = [],
+  function animate(el, d, f, params) {
+      //target element, duration, final value object, ease, update function, complete function
+      var retArray = [],
         t = 0,
         b = {},
         l = {},
         dur = F.MATH.getFrames(d),
-        ease = (params && params.ease)?params.ease :F.EASE.DEFAULT,
-        c = (params && params.complete)?params.complet:null,
+        ease = (params && params.ease) ? params.ease : F.EASE.DEFAULT,
+        c = (params && params.complete) ? params.complet : null,
         pfx = {};
       for (var k in f) {
-        var val = css(el,k);
-        pfx[k] = ((f[k]).indexOf('px') !== -1)?'px':((f[k]).indexOf('%') !== -1)?'%':'';
-        b[k] = parseFloat((val.indexOf('auto') !== -1)?0:val);
+        var val = css(el, k);
+        pfx[k] = ((f[k]).indexOf('px') !== -1) ? 'px' : ((f[k]).indexOf('%') !== -1) ? '%' : '';
+        b[k] = parseFloat((val.indexOf('auto') !== -1) ? 0 : val);
         l[k] = parseFloat(f[k]) - b[k];
       }
-      for(var i = 0; i <= dur; i++){
-        retArray.push((function(){
-          var _s = ''; 
+      for (var i = 0; i <= dur; i++) {
+        retArray.push((function() {
+          var _s = '';
           for (var k in f) {
-            if(i < dur){
+            if (i < dur) {
               _s = k + ' : ' + ((ease(t / dur) * l[k] + b[k])).toFixed(3) + pfx[k] + '; ';
-            }else{
+            } else {
               _s = k + ' : ' + b[k] + pfx[k] + '; ';
-            } 
+            }
           }
-          if(i == dur){
-            return setTimeout(function(){
+          if (i == dur) {
+            return setTimeout(function() {
               el.style.cssText = _s;
               if (c) {
                 c(el);
               }
             }, dur * 16)
           }
-          return setTimeout(function(){
+          return setTimeout(function() {
             el.style.cssText = _s;
-          },i * 16);
+          }, i * 16);
         })());
         ++t;
       }
-    return retArray;
+      return retArray;
+    }
+    //short animation methods
+  F.X.fadeIn = function(el) {
+    css(el, 'opacity', 0);
+    animate(el, 1000, {
+      opacity: 1
+    });
   }
+  F.X.fadeOut = function(el) {
+    css(el, 'opacity', 1);
+    animate(el, 1000, {
+      opacity: 0
+    });
+  }
+  F.X.slideUp = function(el) {
+    animate(el, 1000, {
+      height: '0px'
+    });
+  }
+  F.X.slideDown = function(el, val) {
+      css(el, 'height', '0px');
+      animate(el, 1000, {
+        height: val + 'px'
+      });
+    }
     //middle-square
   F.MATH.SEED = 1234;
 
