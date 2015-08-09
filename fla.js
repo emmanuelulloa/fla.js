@@ -19,6 +19,7 @@ var fla = (function() {
     }, //timeline
     X: {}, //enterframe, tween
     MATH: {},
+    EASE: {},//tween, animate
     MOUSE: {}
   };
   //detect
@@ -295,16 +296,20 @@ var fla = (function() {
       }
       F.X.TICKER.add(F.X.OEF = fn);
     }
-    //tween
+  F.MATH.getFrames = function(dur){
+    return (typeof dur != 'string') ? Math.round(dur / 16.666) : (dur == "fast") ? 12 : (dur == "slow") ? 32 : 24;
+  };
+  F.EASE.DEFAULT = function(t) {
+     return t * t * (3 - 2 * t);
+  };
+  //tween
   function tween(o, d, f, params) {
       //target object, duration, final value object, ease, update function, complete function
       var t = 0,
         b = {},
         l = {},
-        dur = (typeof d != 'string') ? Math.round(d / 16.666) : (d == "fast") ? 12 : (d == "slow") ? 32 : 24,
-        ease = function(t) {
-          return t * t * (3 - 2 * t);
-        },
+        dur = F.MATH.getFrames(d),
+        ease = F.EASE.DEFAULT,
         u, c;
       if (params) {
         if (params.ease) {
@@ -341,6 +346,49 @@ var fla = (function() {
         }
       });
     }
+    //animate
+  function animate(el, d, f, params){
+    //target element, duration, final value object, ease, update function, complete function
+    var retArray = [],
+        t = 0,
+        b = {},
+        l = {},
+        dur = F.MATH.getFrames(d),
+        ease = (params && params.ease)?params.ease :F.EASE.DEFAULT,
+        c = (params && params.complete)?params.complet:null,
+        pfx = {};
+      for (var k in f) {
+        var val = css(el,k);
+        pfx[k] = ((f[k]).indexOf('px') !== -1)?'px':((f[k]).indexOf('%') !== -1)?'%':'';
+        b[k] = parseFloat((val.indexOf('auto') !== -1)?0:val);
+        l[k] = parseFloat(f[k]) - b[k];
+      }
+      for(var i = 0; i <= dur; i++){
+        retArray.push((function(){
+          var _s = ''; 
+          for (var k in f) {
+            if(i < dur){
+              _s = k + ' : ' + ((ease(t / dur) * l[k] + b[k])).toFixed(3) + pfx[k] + '; ';
+            }else{
+              _s = k + ' : ' + b[k] + pfx[k] + '; ';
+            } 
+          }
+          if(i == dur){
+            return setTimeout(function(){
+              el.style.cssText = _s;
+              if (c) {
+                c(el);
+              }
+            }, dur * 16)
+          }
+          return setTimeout(function(){
+            el.style.cssText = _s;
+          },i * 16);
+        })());
+        ++t;
+      }
+    return retArray;
+  }
     //middle-square
   F.MATH.SEED = 1234;
 
@@ -545,6 +593,7 @@ var fla = (function() {
     scroller: scroller,
     enterframe: enterframe,
     tween: tween,
+    animate: animate,
     stateMachine: stateMachine
       /* NON VITAL METHODS END */
   }
